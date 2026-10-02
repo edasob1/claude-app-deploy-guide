@@ -39,7 +39,7 @@ Project
 - Saves must prove the PIN: derive a write token from the PIN-derived key, store only its SHA-256
   on the server, and refuse saves without it. Reject a save based on an out-of-date revision (409)
   instead of overwriting someone else's change.
-- Optional SETUP_CODE environment variable: if set, creating the first budget needs it.
+- Optional SETUP_CODE environment variable: if set, creating or importing the first data needs it.
 - Keep the last 30 saved versions on the server automatically.
 - Admin backup/restore endpoint at /api/backup, switched off unless an ADMIN_KEY environment
   variable is set. Generate a 64-character admin key into &lt;path outside the project&gt; and write me a

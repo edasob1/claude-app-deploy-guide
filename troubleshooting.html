@@ -34,7 +34,7 @@
 <p>Claude Code's safety checks may block reading a credential that was set up for something else. That's deliberate. Make a dedicated token for this project and tell Claude its file path.</p>
 
 <h2>Netlify</h2>
-<h3>The site shows "The budget could not be loaded"</h3>
+<h3>The site says the data "could not be loaded"</h3>
 <p>The page couldn't reach <code>/api/vault</code>. Check <strong>Deploys</strong> for a failed build, and <strong>Logs → Functions</strong> for errors. Make sure the repo contains <code>netlify/functions/</code> and <code>package.json</code>.</p>
 <h3><code>/api/backup</code> returns 503</h3>
 <p><code>ADMIN_KEY</code> isn't set, is shorter than 32 characters, or the site hasn't been redeployed since you added it. Add it, then <strong>Trigger deploy</strong>.</p>
@@ -51,8 +51,8 @@
 
 <h2>Data</h2>
 <h3>"Incorrect PIN" on import</h3>
-<p>Imports need the unlock PIN the data was created with, not a second PIN like a "New Month" PIN.</p>
-<h3>Someone created a budget on my site before I imported mine</h3>
+<p>Imports need the unlock PIN the data was created with, not a second PIN used for risky actions.</p>
+<h3>Someone set up the app on my site before I imported my data</h3>
 <p>Ask Claude to back up that record and restore yours over it with the admin script, then set <code>SETUP_CODE</code> in Netlify for next time.</p>
 
 <hr>

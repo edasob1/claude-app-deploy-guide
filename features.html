@@ -36,34 +36,39 @@ Then tell me anything you couldn't make work on mobile.</pre></div>
 - On touch screens, show an on-page number keypad (1-9, Clear, 0, delete) instead of relying on the phone keyboard.
 - A Lock button, and auto-lock back to the PIN screen after 30 minutes with no activity. Locking must clear the decrypted data and the key from memory.</pre></div>
 <div class="callout warn"><span class="title">Pick a strong enough PIN</span>Once the site is public, anyone can download the encrypted data and try PINs offline. Each guess is slowed down by the 1,000,000 iterations, but a 4-digit PIN has only 10,000 possibilities. Use 6 to 8 digits for the unlock PIN.</div>
-<p>For dangerous actions (like resetting a month), add a second PIN:</p>
-<div class="block prompt"><div class="label">Prompt: second PIN for risky actions</div><pre>"Start New Month" should need its own PIN, separate from the unlock PIN.
+<p>For actions that are hard to undo (closing a period, bulk deletes, resetting totals), add a second PIN:</p>
+<div class="block prompt"><div class="label">Prompt: second PIN for risky actions</div><pre>"&lt;risky action, e.g. Close Period / Delete All / Reset&gt;" should need its own PIN, separate from the unlock PIN.
 Ask the user to choose it the first time, and store only a salted PBKDF2 hash of it,
 inside the encrypted data (never in the page source).</pre></div>
 
 <h2 id="logs">3. Transaction log</h2>
 <p>A log answers "who changed what, and when?" and makes mistakes easy to spot.</p>
 <div class="block prompt"><div class="label">Prompt: transaction log</div><pre>Keep a transaction history of every saved change: date/time, a plain-English description
-("Update Rent from $1,200.00 to $1,250.00") and who made it.
+("Update quantity of &lt;item&gt; from 10 to 12", "Delete &lt;record&gt;") and who made it.
 Store it inside the encrypted data, keep the last 60 days, and show it in a
 "Transaction History" pop-up grouped by day (Today, Yesterday, then dates), newest first.</pre></div>
 
-<h2 id="archive">4. Archive data (monthly history)</h2>
-<p>Archiving freezes a period so you can look back at it, and lets the live view start fresh.</p>
-<div class="block prompt"><div class="label">Prompt: monthly archive</div><pre>Add a "Start New Month" button that:
-1. Asks "Are you sure?" and reminds the user to check the figures are final.
-2. Lets them pick which month to save it as (default: last month early in the month, this month later on).
-3. Saves a frozen, read-only copy of the whole budget to "Budget History", keeping up to 10 years (120 months).
-4. Then resets the daily amounts to $0.00 but keeps the regular lines, income and monthly bills.
-Lines added during the month are shown ticked to carry over; the user can untick any they want removed.
-Add a "Budget History" button with a month picker (grouped by year) that shows any saved month, view only,
-and lists the current month first as "current, running values".</pre></div>
+<h2 id="archive">4. Archive data (snapshots of past periods)</h2>
+<p>Many apps work in periods: a week, a month, a season, a project, a school term. Archiving freezes a period as a read-only snapshot, so you can always look back at it, while the live view starts fresh. Choose what the period is for your app and how long to keep the snapshots.</p>
+<div class="block prompt"><div class="label">Prompt: archive past periods</div><pre>Add a "&lt;Close Period, e.g. Close Week / End Project / New Term&gt;" button that:
+1. Asks "Are you sure?" and reminds the user to check everything is final first.
+2. Lets them name or date the snapshot (with a sensible default).
+3. Saves a frozen, read-only copy of the current data to "History", keeping up to &lt;how long, e.g. 10 years&gt;.
+4. Then resets what should start fresh (&lt;e.g. counts, daily entries&gt;) and keeps what carries over
+   (&lt;e.g. the item list, settings, recurring entries&gt;). Show anything added during the period as a
+   ticked list so the user can untick what shouldn't carry over.
+Add a "History" button with a picker (grouped by year) that shows any snapshot, view only,
+with the current, still-running period listed first.</pre></div>
+<div class="callout"><span class="title">Not every app needs periods</span>If your data just grows (a contact list, a recipe book), skip the reset and ask for a simple "Archive" flag instead, so old records are hidden from the main view but kept and searchable.</div>
 
 <h2 id="reports">5. Reports (PDF)</h2>
-<div class="block prompt"><div class="label">Prompt: PDF reports</div><pre>In Budget History add a "Save as PDF" button for the selected month (current or archived).
-Build the PDF in the browser with jsPDF and jspdf-autotable from cdnjs: A4, a summary table,
-then a table per person with every line and the totals, plus "Created &lt;date&gt; · Page X of Y" in the footer.
+<p>Reports turn the data into something you can print, email or file away. Decide what a useful summary looks like for your app: totals, a list, a chart, one record per page.</p>
+<div class="block prompt"><div class="label">Prompt: PDF reports</div><pre>Add a "Save as PDF" button for &lt;what to report, e.g. the current view / a selected snapshot / one record&gt;.
+Build the PDF in the browser with jsPDF and jspdf-autotable from cdnjs: A4, a title and date,
+a summary section with &lt;the key totals or counts&gt;, then a table of &lt;the detail rows&gt;,
+and "Created &lt;date&gt; · Page X of Y" in the footer.
 Don't use window.print(); it is blocked inside Artifacts.</pre></div>
+<div class="callout tip"><span class="title">Spreadsheet export too</span>For data people want to analyse, also ask for "Export to CSV" next to the PDF button. It opens in Excel or Google Sheets.</div>
 
 <h2 id="export">6. Export and import of the site data</h2>
 <p>This is the feature that lets you move data from the Artifact to the live site, keep your own offline copies, and recover from anything. Add it before you go live.</p>

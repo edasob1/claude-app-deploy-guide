@@ -29,7 +29,7 @@
 </div>
 
 <ol class="steps">
-  <li><strong>You ask</strong> in Claude Code, for example "add a savings goal at the top".</li>
+  <li><strong>You ask</strong> in Claude Code, for example "add a search box above the list".</li>
   <li><strong>Claude backs up the live data</strong> with the admin script, so there's a fresh copy before anything changes.</li>
   <li><strong>Claude edits the source</strong> in the local project folder (and the Artifact too, if you keep both in step).</li>
   <li><strong>Claude pushes</strong> with the publish script: one commit to the <code>main</code> branch on GitHub.</li>
@@ -41,7 +41,7 @@
 <div class="callout tip"><span class="title">It's pushes, not "Releases"</span>Netlify reacts to every push to the production branch (<code>main</code>). You don't need to create GitHub Releases or tags.</div>
 
 <h2>A good change request</h2>
-<div class="block prompt"><div class="label">Prompt: make a change to the live app</div><pre>For &lt;app name&gt;: &lt;describe the change, e.g. "add a savings goal box at the top showing progress"&gt;.
+<div class="block prompt"><div class="label">Prompt: make a change to the live app</div><pre>For &lt;app name&gt;: &lt;describe the change, e.g. "add a search box above the list that filters as I type"&gt;.
 Follow the usual process: back up the live data first, make the change, publish it to GitHub
 with a clear commit message, then check the live site has the new version.
 Tell me if the change needs anything from me (like a new Netlify setting).</pre></div>

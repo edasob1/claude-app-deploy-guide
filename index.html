@@ -30,13 +30,30 @@
 </div>
 <p>After that it's a loop: you ask Claude for a change, Claude backs up the live data, edits the code and pushes it to GitHub, and Netlify updates the site within a minute or two. Your data is never touched by a code update.</p>
 
+<h2>What can you build?</h2>
+<p>Almost anything you'd otherwise keep in a spreadsheet, a notebook or a paper form. The same steps work whatever the app is; only the screens and the data change. A few ideas, and the path each would take:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>App idea</th><th>Path</th><th>Features worth adding</th></tr></thead>
+  <tbody>
+    <tr><td>Stock or equipment tracker for a small business</td><td>Full</td><td>Login, transaction log, low-stock report, CSV export</td></tr>
+    <tr><td>Job or client tracker (quotes, status, follow-ups)</td><td>Full</td><td>Login, log of changes, archive finished jobs, PDF job sheet</td></tr>
+    <tr><td>Household budget, chores or shared shopping list</td><td>Full</td><td>Login, history of past periods, reports</td></tr>
+    <tr><td>Club or team: members, fees, rosters</td><td>Full</td><td>Login, second PIN for deletions, season archives, PDF rosters</td></tr>
+    <tr><td>Maintenance or asset log (vehicles, IT equipment, property)</td><td>Full</td><td>Transaction log, reminders, PDF service history</td></tr>
+    <tr><td>Habit, fitness or study tracker for one person</td><td>Quick</td><td>Data kept on the device, Export / Import backup</td></tr>
+    <tr><td>Calculator, quote estimator or unit converter</td><td>Quick</td><td>Mobile layout, PDF or print-friendly result</td></tr>
+    <tr><td>Guide, portfolio, menu or event page</td><td>Quick</td><td>Mobile layout, light and dark theme</td></tr>
+  </tbody>
+</table></div>
+<p><strong>Full path</strong> = Netlify with a server for shared, backed-up data (Steps 1 to 7). <strong>Quick path</strong> = free GitHub Pages, no server (<a href="simple.html">quick path page</a>).</p>
+
 <div class="callout tip"><span class="title">No data to store? Take the quick path</span>For a guide, portfolio, calculator or other simple site that doesn't need a shared database, skip Netlify and publish straight to free GitHub Pages: see <a href="simple.html">Quick path: simple sites</a>.</div>
 
 <h2>What you'll end up with</h2>
 <ul class="checklist">
   <li>A real website on its own address (for example <code>yourapp.netlify.app</code>) that works on phones, tablets and computers.</li>
   <li>A PIN login, with the data encrypted in the browser so the server only ever holds scrambled data.</li>
-  <li>A transaction log of every change, monthly archives, and PDF reports.</li>
+  <li>A transaction log of every change, archives of past periods, and PDF reports.</li>
   <li>An export and import button, so data can move between versions and devices.</li>
   <li>Automatic deploys: every change Claude publishes goes live by itself.</li>
   <li>An admin backup door and automatic version history, so a mistake can always be undone.</li>

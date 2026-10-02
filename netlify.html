@@ -30,7 +30,7 @@
   <thead><tr><th>Name</th><th>Value</th><th>Needed?</th></tr></thead>
   <tbody>
     <tr><td><code>ADMIN_KEY</code></td><td>The contents of the admin key file Claude generated</td><td>Yes, for backups and restores</td></tr>
-    <tr><td><code>SETUP_CODE</code></td><td>Any code you choose</td><td>Recommended: stops a stranger creating the first budget before you import yours</td></tr>
+    <tr><td><code>SETUP_CODE</code></td><td>Any code you choose</td><td>Recommended: stops a stranger setting up the app before you import your data</td></tr>
   </tbody>
 </table></div>
 <div class="callout warn"><span class="title">New variables need a redeploy</span>Environment variables only reach the functions after the next deploy. Go to <strong>Deploys → Trigger deploy → Deploy site</strong> after adding or changing one.</div>
@@ -55,7 +55,7 @@ Report each result.</pre></div>
 </table></div>
 
 <h2>Optional: your own domain</h2>
-<p>Under <strong>Domain management</strong> you can add a domain you own (for example <code>budget.example.com</code>). Netlify walks you through the DNS record and sets up HTTPS automatically.</p>
+<p>Under <strong>Domain management</strong> you can add a domain you own (for example <code>app.example.com</code>). Netlify walks you through the DNS record and sets up HTTPS automatically.</p>
 
 <div class="callout tip"><span class="title">Keep it out of search engines</span>The site includes a <code>noindex</code> tag so search engines won't list it, but that's not security. The PIN and encryption are what protect the data.</div>
 

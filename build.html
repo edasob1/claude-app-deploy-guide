@@ -25,10 +25,10 @@
 
 <h2>Describe the app</h2>
 <p>Start in Claude Code (or claude.ai) and say what you want, who uses it and what it must do. Be concrete about the screens and the numbers. You can refine everything afterwards, so don't try to be perfect.</p>
-<div class="block prompt"><div class="label">Prompt: first version</div><pre>Build me a web app as an Artifact: a &lt;household budget / job tracker / stock list&gt; for &lt;who uses it&gt;.
+<div class="block prompt"><div class="label">Prompt: first version</div><pre>Build me a web app as an Artifact: a &lt;what it is, e.g. stock tracker / booking list / habit tracker&gt; for &lt;who uses it&gt;.
 
 It needs:
-- &lt;the main things people enter, e.g. income, monthly bills, daily spending&gt;
+- &lt;the main things people enter, e.g. items and quantities, bookings, daily entries&gt;
 - &lt;the totals or summaries to show at the top&gt;
 - Double-click (or tap) any value to edit it, with a "Save changes?" confirmation before anything is saved
 - Data saved so it is still there next time I open it
@@ -38,12 +38,12 @@ Keep it clean and simple, light theme, and make it work well on a phone.</pre></
 <h2>Refine it in small steps</h2>
 <p>Ask for one change at a time, check it, then ask for the next. Short, specific requests work best:</p>
 <ul>
-  <li>"Rename <em>Income</em> to <em>Main Salary</em> and add an <em>Add income source</em> button under it."</li>
+  <li>"Rename <em>Notes</em> to <em>Comments</em> and add an <em>Add another</em> button under it."</li>
   <li>"Make the page lock itself after 30 minutes of no activity."</li>
-  <li>"When I click <em>Start New Month</em>, ask if I'm sure and save this month to history first."</li>
+  <li>"Before deleting anything, ask if I'm sure and show what will be removed."</li>
   <li>"The previous layout was better, put it back." Claude can undo just as easily.</li>
 </ul>
-<div class="callout tip"><span class="title">Tip: always test on a phone</span>Open the Artifact link on your phone as well as your computer. Phones behave differently: for example, they won't pop up the keyboard for a field the page focuses by itself, which is why this project ended up with an on-page number keypad for the PIN.</div>
+<div class="callout tip"><span class="title">Tip: always test on a phone</span>Open the Artifact link on your phone as well as your computer. Phones behave differently: for example, they won't pop up the keyboard for a field the page focuses by itself, so a PIN screen works best with an on-page number keypad.</div>
 
 <h2>What works inside claude.ai and what doesn't</h2>
 <p>Artifacts run inside a protected frame on claude.ai. A few browser features behave differently there:</p>
