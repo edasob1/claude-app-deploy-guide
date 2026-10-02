@@ -46,7 +46,7 @@
 <div class="table-wrap"><table>
   <thead><tr><th>If the board is…</th><th>Use</th><th>How the cards are saved</th></tr></thead>
   <tbody>
-    <tr><td>Just for you, on one device</td><td><a href="simple.html">Quick path</a> (GitHub Pages)</td><td>Browser storage, plus Export / Import to back it up or move it</td></tr>
+    <tr><td>Just for you, on one device</td><td><a href="simple.html">Quick path</a> (GitHub Pages)</td><td>Browser storage, plus Export / Import backup files (<a href="#backup">see below</a>)</td></tr>
     <tr><td>Shared with family or a team, or used on several devices</td><td>Full path (<a href="build.html">Steps 1 to 7</a>)</td><td>On the server, with login, encryption, log and backups from <a href="features.html">Step 2</a></td></tr>
   </tbody>
 </table></div>
@@ -95,6 +95,30 @@ the current board). Show a small "Saved" note after each change.</pre></div>
 - Check for changes from others every 30 seconds while the page is open
   and refresh the board if there are any (without interrupting a drag in progress).</pre></div>
 
+<h2 id="github">4. Publish the Artifact to GitHub</h2>
+<p>Once the board works as an Artifact in claude.ai, Claude Code can turn it into a standalone site and publish it to GitHub for you. A personal board can go straight to free GitHub Pages (the <a href="simple.html">quick path</a>). A shared board goes to Netlify through GitHub (<a href="publish.html">Step 4</a> onwards).</p>
+<div class="block prompt"><div class="label">Prompt: publish my board Artifact to GitHub Pages</div><pre>Take my Kanban board Artifact &lt;artifact link&gt; and publish it as a standalone site on GitHub Pages.
+My GitHub token is in &lt;path to token file&gt; (don't print it or put it in any file).
+- Replace the Artifact-only storage with the browser's localStorage, wrapped in try/catch.
+- Keep the Export / Import backup file format exactly the same as the Artifact version,
+  so a backup exported from the Artifact imports into the website, and the other way round.
+- Check nothing personal or secret is in the files, because the repo will be public.
+- Create the public repo &lt;owner&gt;/&lt;repo-name&gt;, upload the files, switch on GitHub Pages,
+  save the upload as a reusable Publish.ps1 script, and tell me the live address.</pre></div>
+<div class="callout warn"><span class="title">Your cards don't move across by themselves</span>The Artifact's saved data stays inside claude.ai; publishing copies the app, not the cards. Click <strong>Export</strong> in the Artifact, open the new site, and click <strong>Import</strong> to bring the board across.</div>
+
+<h2 id="backup">5. Back up the board with Export / Import</h2>
+<p>The Export / Import buttons are your backup, whichever path you take. On the quick path they are the <em>only</em> backup: browser storage is lost if the browser's site data is cleared, the device is reset or a different browser is used. Make exporting a habit, and keep the files somewhere safe such as OneDrive, Google Drive or a USB stick.</p>
+<div class="block prompt"><div class="label">Prompt: backup and restore for the board</div><pre>Add backup and restore to my Kanban board:
+- "Export backup" downloads the whole board (columns, cards, positions, details and settings)
+  as "&lt;Board name&gt; backup YYYY-MM-DD.json", with { "type": "kanban-backup", "v": 1, "exportedAt": ... }.
+- "Import backup" accepts that file, shows what it contains (board name, number of cards,
+  export date), and asks before replacing the current board.
+- Before any import replaces the board, automatically download a backup of the current one first.
+- Show "Last backup: &lt;date&gt;" in the menu, and a gentle reminder if it's more than &lt;7&gt; days old.
+- Show clear errors for a file that isn't a board backup, or a backup from a newer version.</pre></div>
+<div class="callout tip"><span class="title">The same file moves the board anywhere</span>A backup file also copies the board to another device, browser or person, and gets you back to an earlier state if a lot of cards were moved or deleted by mistake. For the encrypted, shared version, use the export / import prompt from <a href="features.html#export">Step 2</a> instead, so backups stay encrypted.</div>
+
 <h2 id="extras">Ideas to add later</h2>
 <ul>
   <li><strong>Work-in-progress limits.</strong> "Highlight the In progress column when it has more than &lt;3&gt; cards." It's the simplest way to stop starting more than you finish. The demo above does this.</li>
@@ -112,6 +136,8 @@ the current board). Show a small "Saved" note after each change.</pre></div>
   <li><strong>Trying to drag on a phone scrolls the page instead.</strong> The handle needs <code>touch-action: none</code>.</li>
   <li><strong>Clicking a card starts a drag, or dragging opens the card.</strong> Ask for the 5px movement threshold before a drag starts.</li>
   <li><strong>The order is wrong after a reload.</strong> Only the column was saved, not the position. Ask Claude to store a position number for every card and save after each drop.</li>
+  <li><strong>The board is empty after publishing to GitHub.</strong> Publishing copies the app, not the data. Export from the Artifact and Import on the new site.</li>
+  <li><strong>All the cards disappeared on the quick path.</strong> The browser's site data was cleared, or it's a different browser or device. Import your latest backup file.</li>
   <li><strong>Two people moved cards at once and one move was lost.</strong> Add the conflict handling from the shared-board prompt.</li>
 </ul>
 
