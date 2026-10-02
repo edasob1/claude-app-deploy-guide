@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drag-and-Drop Boards</title>
+<meta name="description" content="An app idea: a Kanban-style drag-and-drop board for projects and tasks, with a live demo and prompts to build your own with Claude.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">App idea</p>
+<h1>Drag-and-drop boards: a Kanban for projects and tasks</h1>
+<p class="lead">A board of columns with cards you drag from one column to the next is one of the most useful things you can build with Claude. Each card is a task or a job, each column is a stage, and moving a card is how you update its status. Try the one below, then copy the prompts to build your own.</p>
+
+<h2 id="try">Try it</h2>
+<p>Drag a card to another column or up and down to reorder it. On a phone, drag by the <span aria-hidden="true">⠿</span> handle. With a keyboard, tab to a card and use the arrow keys. Changes are kept in this browser only.</p>
+
+<div class="kb-toolbar">
+  <span class="kb-hint">Example: a small home-office project</span>
+  <button class="copy-btn" type="button" id="kb-reset">Reset demo</button>
+</div>
+<div class="kb-board" id="kb-board" aria-describedby="kb-help"></div>
+<p id="kb-help" class="kb-hint">Keyboard: ← → move a card between columns, ↑ ↓ reorder it, Delete removes it.</p>
+<div class="sr-only" aria-live="polite" id="kb-live"></div>
+
+<h2 id="uses">What you could use it for</h2>
+<p>Any work that moves through stages fits a board. Change the column names and the card details to suit:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Board</th><th>Columns</th><th>Card details worth adding</th></tr></thead>
+  <tbody>
+    <tr><td>Personal or household tasks</td><td>To do · Doing · Done</td><td>Due date, who it's for</td></tr>
+    <tr><td>Project or renovation plan</td><td>Ideas · Quoted · Booked · In progress · Finished</td><td>Cost, supplier, photos or notes</td></tr>
+    <tr><td>Job or sales pipeline</td><td>Enquiry · Quoted · Won · Invoiced · Paid</td><td>Client, value, next follow-up date</td></tr>
+    <tr><td>Support or helpdesk requests</td><td>New · Waiting on someone · Working on it · Resolved</td><td>Priority, assigned to, date raised</td></tr>
+    <tr><td>Content or social media calendar</td><td>Ideas · Writing · Review · Scheduled · Posted</td><td>Channel, publish date</td></tr>
+    <tr><td>Study or assignments</td><td>Not started · Researching · Writing · Handed in</td><td>Subject, due date, grade</td></tr>
+    <tr><td>Event planning</td><td>To book · Waiting to confirm · Confirmed</td><td>Contact, deposit paid, deadline</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="path">Which path to take</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>If the board is…</th><th>Use</th><th>How the cards are saved</th></tr></thead>
+  <tbody>
+    <tr><td>Just for you, on one device</td><td><a href="simple.html">Quick path</a> (GitHub Pages)</td><td>Browser storage, plus Export / Import to back it up or move it</td></tr>
+    <tr><td>Shared with family or a team, or used on several devices</td><td>Full path (<a href="build.html">Steps 1 to 7</a>)</td><td>On the server, with login, encryption, log and backups from <a href="features.html">Step 2</a></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="build">1. Build the board</h2>
+<div class="block prompt"><div class="label">Prompt: a Kanban board app</div><pre>Build a Kanban-style task board as an Artifact for &lt;what it's for, e.g. tracking jobs for my business&gt;.
+- Columns: &lt;e.g. To do, In progress, Waiting, Done&gt;. Let me add, rename, reorder and remove columns.
+- Each column shows its card count and has an "Add card" box at the bottom.
+- A card shows its title and &lt;e.g. due date, who it's assigned to, a coloured label&gt;.
+  Clicking a card opens it to edit the title, notes and those details, or delete it.
+- Overdue cards get a red due date; cards due today an amber one.
+- A search box and filters (by label, by person) that hide cards that don't match.
+- Works well on phones: columns stack one under another below 640px wide.
+- Light and dark theme that follows the device.</pre></div>
+
+<h2 id="drag">2. Drag and drop that also works on phones</h2>
+<p>This is the part most likely to go wrong. The browser's built-in drag and drop (<code>draggable="true"</code>) works with a mouse but <strong>does nothing on most phones and tablets</strong>. Ask for it to be built with pointer events instead, which handle mouse, touch and pen the same way.</p>
+<div class="block prompt"><div class="label">Prompt: drag and drop for mouse, touch and keyboard</div><pre>Make cards draggable between columns and up and down within a column:
+- Use Pointer Events (pointerdown / pointermove / pointerup with setPointerCapture),
+  not the HTML5 draggable API, so it works with touch as well as a mouse.
+- With a mouse, drag the whole card. On touch, drag by a small handle (⠿) with
+  touch-action: none, so swiping elsewhere still scrolls the page.
+- Start the drag only after the pointer moves 5px, so a click still opens the card.
+- While dragging: the card follows the pointer, a gap shows where it will land,
+  the target column is highlighted, and the page auto-scrolls near the top or bottom edge.
+- Escape cancels the drag and puts the card back.
+- Keyboard: focus a card and use ← → to move it between columns and ↑ ↓ to reorder,
+  with a screen-reader announcement like "Moved 'Order parts' to Done, position 2 of 4".
+- Save the new column and position of every card straight after each drop,
+  so the order is the same after a reload.</pre></div>
+<div class="callout tip"><span class="title">Check it on a real phone</span>Desktop browsers' phone preview doesn't always behave like a real touch screen. Open the Artifact (or the live site) on your phone and drag a few cards before moving on.</div>
+
+<h2 id="save">3. Saving the board</h2>
+<p><strong>Quick path (just you):</strong></p>
+<div class="block prompt"><div class="label">Prompt: save on this device, with backups</div><pre>Save the board in the browser's localStorage after every change (wrapped in try/catch,
+so the app still works if storage is blocked). Add "Export board" (downloads a JSON file
+named "&lt;Board name&gt; YYYY-MM-DD.json") and "Import board" (asks before replacing
+the current board). Show a small "Saved" note after each change.</pre></div>
+<p><strong>Full path (shared):</strong> add the <a href="features.html">must-have features</a> first, then:</p>
+<div class="block prompt"><div class="label">Prompt: a shared board for several people</div><pre>This board is shared by &lt;number&gt; people on different devices.
+- Store each card's column and position on the server, inside the encrypted data.
+- Log every move in the transaction log in plain English, e.g.
+  "&lt;name&gt; moved 'Order parts' from In progress to Done".
+- If someone else changed the board since I loaded it, refuse my save, reload the
+  latest board and tell me what changed, instead of overwriting their work.
+- Check for changes from others every 30 seconds while the page is open
+  and refresh the board if there are any (without interrupting a drag in progress).</pre></div>
+
+<h2 id="extras">Ideas to add later</h2>
+<ul>
+  <li><strong>Work-in-progress limits.</strong> "Highlight the In progress column when it has more than &lt;3&gt; cards." It's the simplest way to stop starting more than you finish. The demo above does this.</li>
+  <li><strong>Swimlanes.</strong> Rows across the board per person, client or project, so one board can show several streams of work.</li>
+  <li><strong>Checklists on cards.</strong> Sub-tasks with tick boxes, and a "3 / 5" progress bar on the card.</li>
+  <li><strong>Archive the Done column.</strong> A "Clear Done" button that moves finished cards to a searchable archive, using the <a href="features.html#archive">archive feature</a>.</li>
+  <li><strong>Board templates.</strong> "New board from template" with preset columns for each kind of project you run.</li>
+  <li><strong>Reports.</strong> A PDF or CSV of what was finished this week or month, from the move log (see <a href="features.html#reports">reports</a>).</li>
+  <li><strong>Calendar view.</strong> The same cards laid out by due date, as a second tab.</li>
+</ul>
+
+<h2 id="snags">Common snags</h2>
+<ul>
+  <li><strong>Dragging works on the computer but not the phone.</strong> It was built with the HTML5 <code>draggable</code> API. Paste the drag prompt above and ask Claude to switch to pointer events.</li>
+  <li><strong>Trying to drag on a phone scrolls the page instead.</strong> The handle needs <code>touch-action: none</code>.</li>
+  <li><strong>Clicking a card starts a drag, or dragging opens the card.</strong> Ask for the 5px movement threshold before a drag starts.</li>
+  <li><strong>The order is wrong after a reload.</strong> Only the column was saved, not the position. Ask Claude to store a position number for every card and save after each drop.</li>
+  <li><strong>Two people moved cards at once and one move was lost.</strong> Add the conflict handling from the shared-board prompt.</li>
+</ul>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+<script src="kanban.js"></script>
+</body>
+</html>
