@@ -26,6 +26,8 @@
 <h2>GitHub</h2>
 <h3><code>403 Resource not accessible by personal access token</code></h3>
 <p>The token can't reach that repo or lacks a permission. Edit the token on GitHub: add the repo under <em>Repository access</em> (or choose <em>All repositories</em>), and set <em>Contents</em> to <em>Read and write</em>. Creating repos also needs <em>Administration: Read and write</em>.</p>
+<h3>Switching on GitHub Pages gives 403</h3>
+<p>The token needs <em>both</em> <strong>Pages: Read and write</strong> and <strong>Administration: Read and write</strong>. Ask Claude to read the <code>X-Accepted-GitHub-Permissions</code> header on the failed request: GitHub lists exactly which permissions it wanted. Or switch Pages on by hand under <strong>Settings → Pages</strong>.</p>
 <h3><code>401 Bad credentials</code></h3>
 <p>The token has expired or was deleted, or the file has extra text in it. Make a new token and put only the token in the file.</p>
 <h3>Claude refused to read an existing token file</h3>

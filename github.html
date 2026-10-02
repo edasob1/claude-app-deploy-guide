@@ -33,11 +33,11 @@
         <tr><td>Administration</td><td>Read and write</td><td>Create new repositories</td></tr>
         <tr><td>Contents</td><td>Read and write</td><td>Upload and update the code</td></tr>
         <tr><td>Metadata</td><td>Read-only</td><td>Always required (set automatically)</td></tr>
-        <tr><td>Pages</td><td>Read and write</td><td>Only if Claude should switch on GitHub Pages for a repo</td></tr>
+        <tr><td>Pages</td><td>Read and write</td><td>Only if Claude should switch on GitHub Pages for a repo (this also needs Administration: Read and write)</td></tr>
       </tbody>
     </table></div>
   </li>
-  <li>Click <strong>Generate token</strong> and copy it. GitHub shows it only once.</li>
+  <li>Click <strong>Generate token</strong> and copy it. GitHub shows it only once. (When you <em>edit</em> a token later, the button is <strong>Update</strong> at the bottom of the page; changes aren't saved until you click it.)</li>
 </ol>
 <div class="callout warn"><span class="title">The most common snag</span>With <em>Only select repositories</em>, Claude can create a new repo but then gets <code>403 Resource not accessible by personal access token</code> when uploading to it. The fix: edit the token, add the new repo under <em>Repository access</em>, make sure <em>Contents</em> is <em>Read and write</em>, and save. Nothing needs to be regenerated.</div>
 

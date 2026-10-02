@@ -9,7 +9,8 @@
     { href: 'netlify.html', title: 'Go live on Netlify' },
     { href: 'data.html', title: 'Move & protect your data' },
     { href: 'updates.html', title: 'Making changes later' },
-    { href: 'troubleshooting.html', title: 'Troubleshooting' },
+    { href: 'simple.html', title: 'Quick path: simple sites', mark: '⚡' },
+    { href: 'troubleshooting.html', title: 'Troubleshooting', mark: '?' },
   ];
 
   var here = location.pathname.split('/').pop() || 'index.html';
@@ -38,7 +39,7 @@
       var a = document.createElement('a');
       a.href = p.href;
       if (i === idx) a.setAttribute('aria-current', 'page');
-      var num = document.createElement('span'); num.className = 'num'; num.textContent = i === 0 ? '★' : String(i);
+      var num = document.createElement('span'); num.className = 'num'; num.textContent = p.mark || (i === 0 ? '★' : String(i));
       var t = document.createElement('span'); t.textContent = p.title;
       a.append(num, t); li.append(a); ol.append(li);
     });

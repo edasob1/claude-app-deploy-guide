@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simple Sites on GitHub Pages</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Quick path</p>
+<h1>Simple sites with no database: publish straight to GitHub Pages</h1>
+<p class="lead">If your app doesn't need to save shared data, you can skip Netlify completely. GitHub hosts the pages for free, and Claude Code can create the repo, upload the files and switch the site on for you. This guide itself was published this way.</p>
+
+<h2>Is the quick path right for your app?</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Good fit for GitHub Pages</th><th>Needs the full path (Netlify)</th></tr></thead>
+  <tbody>
+    <tr><td>Guides, documentation, portfolios, landing pages</td><td>Data that several people or devices share</td></tr>
+    <tr><td>Calculators, converters, quizzes, checklists</td><td>A login that protects stored data</td></tr>
+    <tr><td>Tools that keep data only on the device (browser storage), with Export/Import to move it</td><td>Server-side backups, version history, admin restore</td></tr>
+    <tr><td>Games and demos</td><td>Anything with secret keys (they can't be hidden on GitHub Pages)</td></tr>
+  </tbody>
+</table></div>
+<div class="callout warn"><span class="title">Everything on GitHub Pages is public</span>On the free plan, the repository must be public, so anyone can read every file. Never include personal data, keys, passwords or private notes in the code.</div>
+
+<h2>The quick path at a glance</h2>
+<div class="flow" aria-label="Quick path">
+  <div class="node"><b>1. Build</b><span>Artifact or local files</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>2. Token</b><span>Adds Pages permission</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>3. Publish</b><span>Claude creates the public repo and uploads</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>4. Pages on</b><span>Live at <code>you.github.io/repo</code></span></div>
+</div>
+
+<h2>1. Build the site</h2>
+<p>Build it as an Artifact first (see <a href="build.html">Step 1</a>), or ask Claude Code to write the files straight into a folder. Plain HTML, CSS and JavaScript work best: no build step, nothing to install.</p>
+<div class="block prompt"><div class="label">Prompt: a simple site</div><pre>Build a simple static website in &lt;local folder&gt;: &lt;what it is&gt;.
+- Plain HTML, CSS and a little JavaScript, no build step, no server
+- One page per topic, with shared navigation, Previous / Next links, and a menu that works on phones
+- Light and dark theme that follows the device, with a toggle
+- Relative links only (it will be served from https://&lt;user&gt;.github.io/&lt;repo&gt;/)
+- Nothing personal or secret in any file, because the repo will be public</pre></div>
+<div class="callout tip"><span class="title">Saving data without a server</span>A static site can still remember things on the person's own device with browser storage. Ask for an Export / Import button too, so people can back up or move their data. It just won't be shared between devices or people.</div>
+
+<h2>2. Token permissions for GitHub Pages</h2>
+<p>Use a fine-grained token as in <a href="github.html">Step 3</a>, with these repository permissions:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Permission</th><th>Level</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>Contents</td><td>Read and write</td><td>Upload the files</td></tr>
+    <tr><td><strong>Administration</strong></td><td><strong>Read and write</strong></td><td>Create the repo, <em>and</em> needed to switch Pages on</td></tr>
+    <tr><td><strong>Pages</strong></td><td><strong>Read and write</strong></td><td>Switch GitHub Pages on</td></tr>
+    <tr><td>Metadata</td><td>Read-only</td><td>Always required</td></tr>
+  </tbody>
+</table></div>
+<div class="callout warn"><span class="title">Both Pages and Administration are needed</span>Switching Pages on through the API needs <em>both</em> permissions. With only one, GitHub answers <code>403 Resource not accessible by personal access token</code>. After editing a token, remember to click <strong>Update</strong> at the bottom of the page, or the change isn't saved.</div>
+
+<h2>3. Claude publishes it</h2>
+<div class="block prompt"><div class="label">Prompt: publish to GitHub Pages</div><pre>Publish the site in &lt;local folder&gt; to GitHub Pages.
+My token is in &lt;path to token file&gt; (don't print it or put it in any file).
+1. Check nothing personal or secret is in the files, because the repo will be public.
+2. Create a public repo &lt;owner&gt;/&lt;repo-name&gt; and upload the folder as one commit through the GitHub API.
+3. Add a short README with the live link.
+4. Switch on GitHub Pages from the main branch, root folder.
+5. Save the upload as a reusable script (Publish.ps1 -Message "...") for later changes.
+6. Check the live site loads and tell me the address.
+If GitHub refuses a step, tell me exactly which permission is missing.</pre></div>
+<p>Behind the scenes Claude uploads the files, creates a commit and moves the <code>main</code> branch to it, then calls GitHub's Pages API to publish from <code>main</code>.</p>
+
+<h2>4. Switch Pages on by hand (if you prefer)</h2>
+<p>If you'd rather not give the token Administration and Pages rights, this takes 30 seconds:</p>
+<ol class="steps">
+  <li>Open your repo on GitHub and go to <strong>Settings → Pages</strong>.</li>
+  <li>Under <strong>Build and deployment</strong>, set <strong>Source</strong> to <strong>Deploy from a branch</strong>.</li>
+  <li>Choose <strong>Branch: main</strong> and <strong>/ (root)</strong>, then click <strong>Save</strong>.</li>
+  <li>After a minute or two, the address appears at the top of that page: <code>https://&lt;user&gt;.github.io/&lt;repo&gt;/</code>.</li>
+</ol>
+
+<h2>Making changes later</h2>
+<p>Same as the full path, minus the data: ask Claude for the change, it edits the files and runs the publish script, and GitHub Pages rebuilds automatically, usually within a minute or two. Progress shows under the repo's <strong>Actions</strong> tab ("pages build and deployment").</p>
+<div class="block prompt"><div class="label">Prompt: update the simple site</div><pre>For my site &lt;repo-name&gt;: &lt;describe the change&gt;. Publish it with the script and check the live page shows it.</pre></div>
+
+<h2>Common snags</h2>
+<ul>
+  <li><strong>The site shows a 404 at first.</strong> The first build takes a minute or two. Check the repo's <strong>Actions</strong> tab, then reload.</li>
+  <li><strong>Styles or links broken on the live site but fine locally.</strong> A link starts with <code>/</code>, so it points at <code>github.io/</code> instead of <code>github.io/&lt;repo&gt;/</code>. Ask Claude to make every link relative.</li>
+  <li><strong>Old version still showing.</strong> Browsers cache pages. Hard-reload with <kbd>Ctrl</kbd>+<kbd>F5</kbd> (Windows) or <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> (Mac).</li>
+  <li><strong>Want a private repo?</strong> GitHub Pages from private repos needs a paid GitHub plan. Netlify can host a private repo's site for free instead.</li>
+</ul>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>
