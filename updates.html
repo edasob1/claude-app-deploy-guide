@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Making Changes Later</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Step 7</p>
+<h1>Making changes later: the automatic push process</h1>
+<p class="lead">Once everything is connected, improving the app is a conversation. You ask, Claude makes the change and publishes it, and the live site updates by itself, with your data untouched.</p>
+
+<h2>What happens when you ask for a change</h2>
+<div class="flow" aria-label="The update loop">
+  <div class="node"><b>You</b><span>Ask Claude Code for a change</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>Backup</b><span>Claude saves the live data first</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>Edit</b><span>Claude changes the local source</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>Push</b><span>One commit to GitHub <code>main</code></span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>Deploy</b><span>Netlify builds and switches over</span></div>
+</div>
+
+<ol class="steps">
+  <li><strong>You ask</strong> in Claude Code, for example "add a savings goal at the top".</li>
+  <li><strong>Claude backs up the live data</strong> with the admin script, so there's a fresh copy before anything changes.</li>
+  <li><strong>Claude edits the source</strong> in the local project folder (and the Artifact too, if you keep both in step).</li>
+  <li><strong>Claude pushes</strong> with the publish script: one commit to the <code>main</code> branch on GitHub.</li>
+  <li><strong>GitHub tells Netlify</strong> a new commit has arrived. This was set up automatically when you imported the repo.</li>
+  <li><strong>Netlify builds the new version.</strong> Only if the build succeeds does it switch the live site over, all at once. If it fails, the old version simply stays live.</li>
+  <li><strong>Open pages pick it up</strong> on their next reload. The data, stored separately, is exactly as it was.</li>
+</ol>
+
+<div class="callout tip"><span class="title">It's pushes, not "Releases"</span>Netlify reacts to every push to the production branch (<code>main</code>). You don't need to create GitHub Releases or tags.</div>
+
+<h2>A good change request</h2>
+<div class="block prompt"><div class="label">Prompt: make a change to the live app</div><pre>For &lt;app name&gt;: &lt;describe the change, e.g. "add a savings goal box at the top showing progress"&gt;.
+Follow the usual process: back up the live data first, make the change, publish it to GitHub
+with a clear commit message, then check the live site has the new version.
+Tell me if the change needs anything from me (like a new Netlify setting).</pre></div>
+
+<h2>Where to watch it happen</h2>
+<ul>
+  <li><strong>Netlify → Deploys</strong> lists every deploy with its commit message and status, and has a log for each build.</li>
+  <li><strong>Site configuration → Build &amp; deploy → Continuous deployment</strong> shows which repo and branch the site follows.</li>
+  <li><strong>GitHub → your repo → Commits</strong> shows every change Claude has published.</li>
+</ul>
+
+<h2>Rolling back a bad change</h2>
+<p>Two different kinds of "undo":</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Problem</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>The new <strong>code</strong> has a bug</td><td>In Netlify → Deploys, open an earlier deploy and click <strong>Publish deploy</strong> for an instant rollback. Then ask Claude to fix the code properly.</td></tr>
+    <tr><td>The <strong>data</strong> got damaged</td><td>Ask Claude to restore from the backup it took before the change, or from a saved version (see <a href="data.html">Step 6</a>).</td></tr>
+  </tbody>
+</table></div>
+
+<h2>Keeping the Artifact and the site in step</h2>
+<p>You can keep developing in the Artifact if you prefer its instant preview, then ask Claude to carry the change over to the site. Or retire the Artifact and work on the site only. Either way, say which one is the "real" one so data isn't edited in two places.</p>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

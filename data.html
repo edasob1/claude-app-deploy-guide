@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Move and Protect Your Data</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Step 6</p>
+<h1>Move your data across, and keep it safe</h1>
+<p class="lead">Your data lives in a different place from your code. Understanding that one fact makes everything else here easy.</p>
+
+<h2>Where everything lives</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>What</th><th>Where</th><th>Changed by</th></tr></thead>
+  <tbody>
+    <tr><td>The app's code</td><td>GitHub repository</td><td>Claude publishing a change</td></tr>
+    <tr><td>The live site</td><td>Netlify, built from GitHub</td><td>Netlify, automatically after each push</td></tr>
+    <tr><td>Your data (encrypted)</td><td>Netlify Blobs storage</td><td>Only the app, and the admin backup door</td></tr>
+    <tr><td>Offline backups</td><td>Files on your computer</td><td>You (Export Backup) or Claude (admin script)</td></tr>
+  </tbody>
+</table></div>
+<p>Because the data isn't in the repository, publishing new code can't overwrite or delete it.</p>
+
+<h2>Move your data from the Artifact to the live site</h2>
+<ol class="steps">
+  <li>Open the Artifact on claude.ai, unlock it, and click <strong>Export Backup</strong>. Accept the download prompt.</li>
+  <li>Open your new site. Because it has no data yet, it shows the first-run screen.</li>
+  <li>Click <strong>Import a backup file</strong>, choose the file, and enter the same unlock PIN you used in the Artifact (and the setup code, if you set one).</li>
+  <li>The site checks the PIN by decrypting the file, saves it, and opens your budget, exactly as it was.</li>
+</ol>
+<div class="callout warn"><span class="title">Do the import straight after the first deploy</span>Until data exists, anyone who finds the address sees the first-run screen and could create their own budget there. Import yours right away, or set <code>SETUP_CODE</code> in Netlify first.</div>
+
+<h2>Three layers of protection</h2>
+<h3>1. Export Backup (for you)</h3>
+<p>The button in the app downloads an encrypted copy any time. Keep a few in a safe folder or cloud drive. They're useless without the PIN, so they're safe to store.</p>
+
+<h3>2. Automatic version history (on the server)</h3>
+<p>Every save keeps the previous version, up to the last 30. If something goes wrong, for example a bad import or an accidental mass delete, Claude can roll back to any of them.</p>
+
+<h3>3. The admin backup door (for Claude)</h3>
+<p>A protected endpoint, <code>/api/backup</code>, lets Claude Code copy the live data down to your computer, list the saved versions, and restore one. It needs the <code>ADMIN_KEY</code>, and it only handles the encrypted data. Even with the key, nobody can read the figures without the PIN.</p>
+<div class="block"><div class="label">The admin script's actions</div><pre>Backup    save the live data to a dated file in the backups folder
+List      show the live revision and the server's saved versions
+Restore   put back a backup file or a saved version (the one it replaces is kept too)</pre></div>
+<div class="block prompt"><div class="label">Prompt: back up now</div><pre>Back up the live data for &lt;app name&gt; with the admin script and tell me the file name and revision.</pre></div>
+<div class="block prompt"><div class="label">Prompt: undo a mistake</div><pre>Something went wrong with &lt;app name&gt; after &lt;time / what happened&gt;. Back up the current live data first,
+then list the saved versions and restore the last one from before that. Tell me what you restored.</pre></div>
+
+<h2>How the protection fits together</h2>
+<div class="flow" aria-label="How data is protected">
+  <div class="node"><b>Your device</b><span>Encrypts with the PIN before sending</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>/api/vault</b><span>Refuses saves without the PIN-derived write token</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>Netlify Blobs</b><span>Stores ciphertext + 30 previous versions</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>Backups</b><span>Export files and admin backups on your PC</span></div>
+</div>
+
+<div class="callout danger"><span class="title">The PIN can't be recovered</span>The PIN is never stored anywhere. If it's forgotten, the data, including every backup, stays locked for good. Keep it somewhere safe, such as a password manager.</div>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

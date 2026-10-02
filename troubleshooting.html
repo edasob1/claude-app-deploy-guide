@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troubleshooting</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Help</p>
+<h1>Troubleshooting</h1>
+<p class="lead">The problems people actually run into on this journey, and how to fix each one. When in doubt, describe exactly what you saw to Claude, ideally with a screenshot.</p>
+
+<h2>In the Artifact</h2>
+<h3>"Print" or "Save as PDF" does nothing</h3>
+<p>The print dialog is blocked inside claude.ai's frame. Ask Claude to generate the PDF in the page with jsPDF and offer it through the Artifact's download capability instead.</p>
+<h3>Someone I shared it with sees "could not be loaded"</h3>
+<p>They need to be signed in to Claude, and invited from the Share menu. To edit (not just view), give them Contributor access or above.</p>
+<h3>The phone keyboard doesn't open for the PIN</h3>
+<p>Phones only open their keyboard when the person taps a field. Ask for an on-page number keypad on touch screens.</p>
+
+<h2>GitHub</h2>
+<h3><code>403 Resource not accessible by personal access token</code></h3>
+<p>The token can't reach that repo or lacks a permission. Edit the token on GitHub: add the repo under <em>Repository access</em> (or choose <em>All repositories</em>), and set <em>Contents</em> to <em>Read and write</em>. Creating repos also needs <em>Administration: Read and write</em>.</p>
+<h3><code>401 Bad credentials</code></h3>
+<p>The token has expired or was deleted, or the file has extra text in it. Make a new token and put only the token in the file.</p>
+<h3>Claude refused to read an existing token file</h3>
+<p>Claude Code's safety checks may block reading a credential that was set up for something else. That's deliberate. Make a dedicated token for this project and tell Claude its file path.</p>
+
+<h2>Netlify</h2>
+<h3>The site shows "The budget could not be loaded"</h3>
+<p>The page couldn't reach <code>/api/vault</code>. Check <strong>Deploys</strong> for a failed build, and <strong>Logs → Functions</strong> for errors. Make sure the repo contains <code>netlify/functions/</code> and <code>package.json</code>.</p>
+<h3><code>/api/backup</code> returns 503</h3>
+<p><code>ADMIN_KEY</code> isn't set, is shorter than 32 characters, or the site hasn't been redeployed since you added it. Add it, then <strong>Trigger deploy</strong>.</p>
+<h3>A save says "changed on another device"</h3>
+<p>Two devices edited at once. The app refused the second save instead of overwriting, and reloaded the latest figures. Make the change again.</p>
+<h3>A change didn't appear on the live site</h3>
+<p>Look at <strong>Deploys</strong>: if the newest deploy failed, the old version is still live. Send the build log to Claude. If it succeeded, reload the page; phones sometimes keep the old page open in the background.</p>
+
+<h2>PowerShell (Windows)</h2>
+<h3><code>Unexpected token '?'</code></h3>
+<p>That command was written for PowerShell 7 and you ran it in Windows PowerShell 5.1. Ask Claude for a 5.1-compatible version, or install <a href="https://learn.microsoft.com/powershell/scripting/install/installing-powershell-on-windows">PowerShell 7</a>.</p>
+<h3>Commands starting with <code>!</code> fail in a normal PowerShell window</h3>
+<p>The <code>!</code> prefix only works when typed into the Claude Code prompt. In a separate PowerShell window, paste the command without the <code>!</code>.</p>
+
+<h2>Data</h2>
+<h3>"Incorrect PIN" on import</h3>
+<p>Imports need the unlock PIN the data was created with, not a second PIN like a "New Month" PIN.</p>
+<h3>Someone created a budget on my site before I imported mine</h3>
+<p>Ask Claude to back up that record and restore yours over it with the admin script, then set <code>SETUP_CODE</code> in Netlify for next time.</p>
+
+<hr>
+<h2>Security checklist before you share the link</h2>
+<ul class="checklist">
+  <li>Unlock PIN is 6 to 8 digits and stored in a password manager.</li>
+  <li>Your data was imported (or <code>SETUP_CODE</code> is set) so nobody else can claim the first-run screen.</li>
+  <li><code>ADMIN_KEY</code> is set in Netlify and kept in a file outside the project.</li>
+  <li>No token, key or PIN appears in the repo, the chat, or screenshots.</li>
+  <li>A first admin backup has been taken successfully.</li>
+  <li>The GitHub token has an expiry date and only the permissions listed in Step 3.</li>
+</ul>
+
+<footer class="site">Written from a real project built with Claude Code, Claude Artifacts, GitHub and Netlify. Services change their menus from time to time; if a button has moved, the setting usually has the same name.</footer>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

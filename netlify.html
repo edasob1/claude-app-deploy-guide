@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Go Live on Netlify</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Step 5</p>
+<h1>Go live on Netlify</h1>
+<p class="lead">Netlify takes the code from GitHub, runs the server functions, stores the data and gives the app a web address. You connect it once; after that it updates by itself.</p>
+
+<h2>Connect the repository</h2>
+<ol class="steps">
+  <li>Sign in at <a href="https://app.netlify.com">app.netlify.com</a> (signing up with your GitHub account makes this smoother).</li>
+  <li>Choose <strong>Add new project → Import an existing project → GitHub</strong>.</li>
+  <li>If asked, authorise Netlify on GitHub and give it access to the new repository. If your repo is on a different GitHub account from the one you signed in with, use <strong>Configure the Netlify app on GitHub</strong> to add that account or repo.</li>
+  <li>Pick the repository. Leave <strong>Build command</strong> and <strong>Publish directory</strong> empty: the repo's <code>netlify.toml</code> sets them.</li>
+  <li>Choose a site name; it becomes the address, for example <code>myapp.netlify.app</code>. Click <strong>Deploy</strong>.</li>
+</ol>
+
+<h2>Add the secrets (environment variables)</h2>
+<p>Secrets live in Netlify's settings, never in the code. Go to <strong>Site configuration → Environment variables → Add a variable</strong>:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Name</th><th>Value</th><th>Needed?</th></tr></thead>
+  <tbody>
+    <tr><td><code>ADMIN_KEY</code></td><td>The contents of the admin key file Claude generated</td><td>Yes, for backups and restores</td></tr>
+    <tr><td><code>SETUP_CODE</code></td><td>Any code you choose</td><td>Recommended: stops a stranger creating the first budget before you import yours</td></tr>
+  </tbody>
+</table></div>
+<div class="callout warn"><span class="title">New variables need a redeploy</span>Environment variables only reach the functions after the next deploy. Go to <strong>Deploys → Trigger deploy → Deploy site</strong> after adding or changing one.</div>
+
+<h2>Check it's working</h2>
+<p>Send Claude the address and ask it to check:</p>
+<div class="block prompt"><div class="label">Prompt: verify the live site</div><pre>The site is live at &lt;https://yourapp.netlify.app&gt;. Save that URL for the admin script, then check:
+1. the page loads the new version,
+2. /api/vault responds (404 is fine before any data exists),
+3. /api/backup refuses a request without the admin key,
+4. a backup with the admin key works (once data exists).
+Report each result.</pre></div>
+<p>A healthy result looks like this:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Check</th><th>Expected</th></tr></thead>
+  <tbody>
+    <tr><td>Page</td><td>200, new version</td></tr>
+    <tr><td><code>/api/vault</code></td><td>404 before import, 200 after</td></tr>
+    <tr><td><code>/api/backup</code> without key</td><td>403 forbidden (a 503 means <code>ADMIN_KEY</code> isn't set or the site wasn't redeployed)</td></tr>
+    <tr><td>Admin backup</td><td>A file saved in your backups folder</td></tr>
+  </tbody>
+</table></div>
+
+<h2>Optional: your own domain</h2>
+<p>Under <strong>Domain management</strong> you can add a domain you own (for example <code>budget.example.com</code>). Netlify walks you through the DNS record and sets up HTTPS automatically.</p>
+
+<div class="callout tip"><span class="title">Keep it out of search engines</span>The site includes a <code>noindex</code> tag so search engines won't list it, but that's not security. The PIN and encryption are what protect the data.</div>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deploy Apps with Claude</title>
+<meta name="description" content="A beginner's step-by-step guide: build a web app with Claude, publish it to GitHub from Claude Code, and run it live on Netlify with secure, backed-up data.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Beginner's guide</p>
+<h1>Build a web app with Claude and put it live, start to finish</h1>
+<p class="lead">This guide follows one real project from an idea typed into Claude to a live, mobile-friendly website with a secure login, encrypted data, history, reports and backups. You don't need to have done any of this before.</p>
+
+<h2>The whole journey on one screen</h2>
+<div class="flow" role="list" aria-label="The deployment flow">
+  <div class="node" role="listitem"><b>1. Claude</b><span>Build the app as an Artifact</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node" role="listitem"><b>2. GitHub</b><span>Token so Claude Code can publish</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node" role="listitem"><b>3. Claude Code</b><span>Creates the repo and pushes the code</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node" role="listitem"><b>4. Netlify</b><span>Builds and hosts the live site</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node" role="listitem"><b>5. Your data</b><span>Imported, encrypted, backed up</span></div>
+</div>
+<p>After that it's a loop: you ask Claude for a change, Claude backs up the live data, edits the code and pushes it to GitHub, and Netlify updates the site within a minute or two. Your data is never touched by a code update.</p>
+
+<h2>What you'll end up with</h2>
+<ul class="checklist">
+  <li>A real website on its own address (for example <code>yourapp.netlify.app</code>) that works on phones, tablets and computers.</li>
+  <li>A PIN login, with the data encrypted in the browser so the server only ever holds scrambled data.</li>
+  <li>A transaction log of every change, monthly archives, and PDF reports.</li>
+  <li>An export and import button, so data can move between versions and devices.</li>
+  <li>Automatic deploys: every change Claude publishes goes live by itself.</li>
+  <li>An admin backup door and automatic version history, so a mistake can always be undone.</li>
+</ul>
+
+<h2>What you need before you start</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Thing</th><th>Why</th><th>Cost</th></tr></thead>
+  <tbody>
+    <tr><td><strong>A Claude account</strong> at <a href="https://claude.ai">claude.ai</a></td><td>To build and test the app as an Artifact. Claude Code needs a paid plan (Pro or above) or an API account.</td><td>Paid plan for Claude Code</td></tr>
+    <tr><td><strong>Claude Code</strong> on your computer</td><td>The terminal version of Claude that can create files and run commands, including publishing to GitHub. <a href="https://docs.claude.com/en/docs/claude-code/overview">Install guide</a>.</td><td>Included with the plan</td></tr>
+    <tr><td><strong>A GitHub account</strong> at <a href="https://github.com">github.com</a></td><td>Stores the app's code. Netlify watches it for changes.</td><td>Free</td></tr>
+    <tr><td><strong>A Netlify account</strong> at <a href="https://www.netlify.com">netlify.com</a></td><td>Hosts the live site and stores its data. Sign up with GitHub to make linking easier.</td><td>Free tier is enough for a personal app</td></tr>
+  </tbody>
+</table></div>
+<div class="callout tip"><span class="title">You don't need to install Git or Node</span>Claude Code can talk to GitHub's web API directly with a token, so the whole flow works on a plain Windows, Mac or Linux machine with only Claude Code installed.</div>
+
+<h2>The steps</h2>
+<div class="cards">
+  <a class="card" href="build.html"><span class="k">Step 1</span><h3>Build the app in Claude</h3><p>Describe it, try it, refine it as an Artifact.</p></a>
+  <a class="card" href="features.html"><span class="k">Step 2</span><h3>Must-have features</h3><p>Ready-to-copy prompts: mobile, login, logs, archives, reports, export.</p></a>
+  <a class="card" href="github.html"><span class="k">Step 3</span><h3>GitHub token for Claude</h3><p>Create a fine-grained token and hand it over safely.</p></a>
+  <a class="card" href="publish.html"><span class="k">Step 4</span><h3>Claude publishes the repo</h3><p>Turn the Artifact into a real site and push it to GitHub.</p></a>
+  <a class="card" href="netlify.html"><span class="k">Step 5</span><h3>Go live on Netlify</h3><p>Import from GitHub, set the secrets, deploy.</p></a>
+  <a class="card" href="data.html"><span class="k">Step 6</span><h3>Move &amp; protect your data</h3><p>Export, import, admin backups, version history.</p></a>
+  <a class="card" href="updates.html"><span class="k">Step 7</span><h3>Making changes later</h3><p>How the automatic push and deploy loop works.</p></a>
+  <a class="card" href="troubleshooting.html"><span class="k">Help</span><h3>Troubleshooting</h3><p>The errors you're likely to meet, and the fixes.</p></a>
+</div>
+
+<div class="callout"><span class="title">How to use the prompts in this guide</span>Every box marked <strong>Prompt</strong> is text you can copy and paste to Claude. Words in <code>&lt;angle brackets&gt;</code> are placeholders: replace them with your own details before sending.</div>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

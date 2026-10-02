@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Must-Have App Features</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Step 2</p>
+<h1>Must-have features, with prompts to copy</h1>
+<p class="lead">These are the features that make a personal app safe and pleasant to live with. Add them while the app is still an Artifact, one prompt at a time, and test each before moving on.</p>
+
+<div class="callout"><span class="title">Order matters a little</span>Do the <a href="#login">secure login</a> before the others: once data is encrypted, every later feature (logs, archives, backups) is automatically stored encrypted too.</div>
+
+<h2 id="mobile">1. Mobile friendly</h2>
+<p>Most people will open the app on a phone. Ask for it explicitly; don't assume.</p>
+<div class="block prompt"><div class="label">Prompt: mobile friendly</div><pre>Make the whole app work well on phones:
+- Single column below 640px wide, no sideways scrolling
+- Buttons and tap targets at least 44px high
+- Numbers right-aligned and in tabular figures so columns line up
+- Pop-ups fit the screen and scroll inside themselves
+- Use the numeric keyboard for number fields (inputmode="numeric" or "decimal")
+Then tell me anything you couldn't make work on mobile.</pre></div>
+
+<h2 id="login">2. Secure login with real encryption</h2>
+<p>A PIN screen on its own only hides the page; anyone who can read the stored data still can. Ask for the data itself to be encrypted with a key made from the PIN, so the server and the storage only ever see scrambled data.</p>
+<div class="block prompt"><div class="label">Prompt: encrypted PIN login</div><pre>Add a secure PIN login:
+- Store the data only as AES-256-GCM ciphertext. Derive the key from the PIN with PBKDF2-SHA256 (1,000,000 iterations, random salt). Never store the PIN or a hash of it; a wrong PIN simply fails to decrypt.
+- First run: ask the user to choose a PIN (and confirm it), and warn that it cannot be recovered.
+- Auto-unlock as soon as the full PIN is typed (no need to press Enter).
+- On touch screens, show an on-page number keypad (1-9, Clear, 0, delete) instead of relying on the phone keyboard.
+- A Lock button, and auto-lock back to the PIN screen after 30 minutes with no activity. Locking must clear the decrypted data and the key from memory.</pre></div>
+<div class="callout warn"><span class="title">Pick a strong enough PIN</span>Once the site is public, anyone can download the encrypted data and try PINs offline. Each guess is slowed down by the 1,000,000 iterations, but a 4-digit PIN has only 10,000 possibilities. Use 6 to 8 digits for the unlock PIN.</div>
+<p>For dangerous actions (like resetting a month), add a second PIN:</p>
+<div class="block prompt"><div class="label">Prompt: second PIN for risky actions</div><pre>"Start New Month" should need its own PIN, separate from the unlock PIN.
+Ask the user to choose it the first time, and store only a salted PBKDF2 hash of it,
+inside the encrypted data (never in the page source).</pre></div>
+
+<h2 id="logs">3. Transaction log</h2>
+<p>A log answers "who changed what, and when?" and makes mistakes easy to spot.</p>
+<div class="block prompt"><div class="label">Prompt: transaction log</div><pre>Keep a transaction history of every saved change: date/time, a plain-English description
+("Update Rent from $1,200.00 to $1,250.00") and who made it.
+Store it inside the encrypted data, keep the last 60 days, and show it in a
+"Transaction History" pop-up grouped by day (Today, Yesterday, then dates), newest first.</pre></div>
+
+<h2 id="archive">4. Archive data (monthly history)</h2>
+<p>Archiving freezes a period so you can look back at it, and lets the live view start fresh.</p>
+<div class="block prompt"><div class="label">Prompt: monthly archive</div><pre>Add a "Start New Month" button that:
+1. Asks "Are you sure?" and reminds the user to check the figures are final.
+2. Lets them pick which month to save it as (default: last month early in the month, this month later on).
+3. Saves a frozen, read-only copy of the whole budget to "Budget History", keeping up to 10 years (120 months).
+4. Then resets the daily amounts to $0.00 but keeps the regular lines, income and monthly bills.
+Lines added during the month are shown ticked to carry over; the user can untick any they want removed.
+Add a "Budget History" button with a month picker (grouped by year) that shows any saved month, view only,
+and lists the current month first as "current, running values".</pre></div>
+
+<h2 id="reports">5. Reports (PDF)</h2>
+<div class="block prompt"><div class="label">Prompt: PDF reports</div><pre>In Budget History add a "Save as PDF" button for the selected month (current or archived).
+Build the PDF in the browser with jsPDF and jspdf-autotable from cdnjs: A4, a summary table,
+then a table per person with every line and the totals, plus "Created &lt;date&gt; · Page X of Y" in the footer.
+Don't use window.print(); it is blocked inside Artifacts.</pre></div>
+
+<h2 id="export">6. Export and import of the site data</h2>
+<p>This is the feature that lets you move data from the Artifact to the live site, keep your own offline copies, and recover from anything. Add it before you go live.</p>
+<div class="block prompt"><div class="label">Prompt: export / import (give this to Claude or any developer)</div><pre>Add data export and import to the app:
+
+Export
+- An "Export Backup" button (visible only after unlocking) that downloads a JSON file named
+  "&lt;App name&gt; backup YYYY-MM-DD.json".
+- The file contains the encrypted document exactly as stored, never the PIN or decrypted data:
+  { "type": "&lt;app&gt;-backup", "v": 1, "exportedAt": "&lt;ISO date&gt;", "doc": { v, kdf, iter, salt, iv, ct } }
+- Inside a claude.ai Artifact, save it through the "downloads" capability; on a normal website,
+  use a Blob and an &lt;a download&gt; link.
+
+Import
+- On the first-run screen (when no data exists yet) show "Import a backup file" next to "Create new".
+- Accept the backup format above, or a bare { salt, iv, ct, iter } document.
+- Ask for the unlock PIN, prove it by decrypting the file before saving anything,
+  then store the document unchanged so the same PIN keeps working.
+- Show clear errors for: not a backup file, wrong PIN, server refused.
+
+Keep the stored document format identical between the Artifact version and the website version,
+so a backup from one imports into the other.</pre></div>
+
+<h2 id="also">Also worth having</h2>
+<ul>
+  <li><strong>Confirm before saving.</strong> A "Save changes?" pop-up that repeats exactly what will change.</li>
+  <li><strong>Who made the change.</strong> On your own site there's no Claude sign-in, so ask for a simple name picker on the unlock screen.</li>
+  <li><strong>Save status.</strong> "Saving…", "All changes saved" and clear error messages, so nobody wonders if it worked.</li>
+  <li><strong>Conflict handling.</strong> If two devices edit at once, the second save should be refused with a message and the latest figures reloaded, rather than silently overwriting.</li>
+</ul>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

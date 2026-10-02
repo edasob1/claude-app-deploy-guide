@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GitHub Token for Claude</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Step 3</p>
+<h1>Give Claude Code a GitHub token, safely</h1>
+<p class="lead">A personal access token is a password-like key that lets Claude Code create a repository and upload your app's code for you. A fine-grained token can be limited to exactly what's needed and revoked at any time.</p>
+
+<h2>Create the token</h2>
+<ol class="steps">
+  <li>Sign in to GitHub and open <a href="https://github.com/settings/personal-access-tokens/new">Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</a>.</li>
+  <li><strong>Token name:</strong> something you'll recognise, for example <code>claude-code-deploy</code>.</li>
+  <li><strong>Expiration:</strong> 90 days is a good balance. You'll make a new one when it runs out.</li>
+  <li><strong>Repository access:</strong> pick one of these (see the note below):
+    <ul>
+      <li><strong>All repositories</strong>: simplest. Claude can publish new apps without you changing the token each time.</li>
+      <li><strong>Only select repositories</strong>: safer, but you must add each new repo to the token before Claude can upload to it.</li>
+    </ul>
+  </li>
+  <li><strong>Repository permissions</strong>, set these and leave everything else as <em>No access</em>:
+    <div class="table-wrap"><table>
+      <thead><tr><th>Permission</th><th>Level</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Administration</td><td>Read and write</td><td>Create new repositories</td></tr>
+        <tr><td>Contents</td><td>Read and write</td><td>Upload and update the code</td></tr>
+        <tr><td>Metadata</td><td>Read-only</td><td>Always required (set automatically)</td></tr>
+        <tr><td>Pages</td><td>Read and write</td><td>Only if Claude should switch on GitHub Pages for a repo</td></tr>
+      </tbody>
+    </table></div>
+  </li>
+  <li>Click <strong>Generate token</strong> and copy it. GitHub shows it only once.</li>
+</ol>
+<div class="callout warn"><span class="title">The most common snag</span>With <em>Only select repositories</em>, Claude can create a new repo but then gets <code>403 Resource not accessible by personal access token</code> when uploading to it. The fix: edit the token, add the new repo under <em>Repository access</em>, make sure <em>Contents</em> is <em>Read and write</em>, and save. Nothing needs to be regenerated.</div>
+
+<h2>Hand the token to Claude Code without pasting it in chat</h2>
+<p>Anything typed into a chat is kept in the conversation history and logs. Put the token in a file instead and tell Claude where it is.</p>
+<ol class="steps">
+  <li>Create a text file containing only the token on one line, for example <code>C:\secrets\github-token.txt</code> (Windows) or <code>~/secrets/github-token.txt</code> (Mac/Linux). Keep it outside any folder that gets uploaded.</li>
+  <li>Tell Claude Code where it is:</li>
+</ol>
+<div class="block prompt"><div class="label">Prompt: hand over the token</div><pre>My GitHub fine-grained token is in &lt;path to token file&gt;.
+Don't print it or put it in any file you publish.
+First run a read-only check: which account it belongs to, its type, and which repos it can see.</pre></div>
+<p>Claude will reply with something like <em>"fine-grained token for account <code>yourname</code>, can see 2 repos"</em>. That confirms the token works before anything is created.</p>
+
+<div class="callout tip"><span class="title">Use a separate token per purpose</span>If you already have a token for another job (for example releasing a different tool), don't reuse it. A dedicated token keeps each job's access separate and lets you revoke one without breaking the other.</div>
+
+<h2>Keeping the token safe</h2>
+<ul>
+  <li>Never put it in the app's code, a README, a screenshot or a chat message.</li>
+  <li>If it ever leaks, delete it on the same GitHub page straight away; anything using it stops working immediately.</li>
+  <li>When it expires, generate a new one with the same settings and overwrite the file. Claude picks up the new one automatically.</li>
+</ul>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

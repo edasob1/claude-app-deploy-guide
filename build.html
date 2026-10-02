@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build the App in Claude</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Step 1</p>
+<h1>Build the app in Claude as an Artifact</h1>
+<p class="lead">An Artifact is a web page Claude builds and hosts for you inside claude.ai. It's the fastest way to design and test the app before it goes anywhere public.</p>
+
+<h2>Why start with an Artifact</h2>
+<ul>
+  <li><strong>Instant preview.</strong> You see the app working as soon as Claude writes it, and every change appears straight away.</li>
+  <li><strong>Built-in storage.</strong> Artifacts can save data in claude.ai, so the app is genuinely usable while you shape it.</li>
+  <li><strong>Private by default.</strong> Only you can open it until you share it.</li>
+  <li><strong>Easy to move later.</strong> Once you're happy, Claude Code turns the same page into a standalone website (Step 4).</li>
+</ul>
+
+<h2>Describe the app</h2>
+<p>Start in Claude Code (or claude.ai) and say what you want, who uses it and what it must do. Be concrete about the screens and the numbers. You can refine everything afterwards, so don't try to be perfect.</p>
+<div class="block prompt"><div class="label">Prompt: first version</div><pre>Build me a web app as an Artifact: a &lt;household budget / job tracker / stock list&gt; for &lt;who uses it&gt;.
+
+It needs:
+- &lt;the main things people enter, e.g. income, monthly bills, daily spending&gt;
+- &lt;the totals or summaries to show at the top&gt;
+- Double-click (or tap) any value to edit it, with a "Save changes?" confirmation before anything is saved
+- Data saved so it is still there next time I open it
+
+Keep it clean and simple, light theme, and make it work well on a phone.</pre></div>
+
+<h2>Refine it in small steps</h2>
+<p>Ask for one change at a time, check it, then ask for the next. Short, specific requests work best:</p>
+<ul>
+  <li>"Rename <em>Income</em> to <em>Main Salary</em> and add an <em>Add income source</em> button under it."</li>
+  <li>"Make the page lock itself after 30 minutes of no activity."</li>
+  <li>"When I click <em>Start New Month</em>, ask if I'm sure and save this month to history first."</li>
+  <li>"The previous layout was better, put it back." Claude can undo just as easily.</li>
+</ul>
+<div class="callout tip"><span class="title">Tip: always test on a phone</span>Open the Artifact link on your phone as well as your computer. Phones behave differently: for example, they won't pop up the keyboard for a field the page focuses by itself, which is why this project ended up with an on-page number keypad for the PIN.</div>
+
+<h2>What works inside claude.ai and what doesn't</h2>
+<p>Artifacts run inside a protected frame on claude.ai. A few browser features behave differently there:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Feature</th><th>Inside an Artifact</th><th>On your own website</th></tr></thead>
+  <tbody>
+    <tr><td>Saving data</td><td>claude.ai's built-in storage (only for signed-in people the Artifact is shared with)</td><td>Your own server function (Step 4)</td></tr>
+    <tr><td>Print dialog (<code>window.print()</code>)</td><td>Blocked: nothing happens</td><td>Works</td></tr>
+    <tr><td>Downloading a file (PDF, backup)</td><td>Through claude.ai's download prompt</td><td>Normal browser download</td></tr>
+    <tr><td>Knowing who is using it</td><td>claude.ai can tell the page who is signed in</td><td>You add your own (for example a name picker)</td></tr>
+  </tbody>
+</table></div>
+<p>None of this stops you. Just tell Claude what you saw ("I clicked Print and nothing happened") and it will switch to an approach that works, such as generating the PDF as a download.</p>
+
+<h2>Sharing the Artifact</h2>
+<p>From the Artifact's <strong>Share</strong> menu you can invite people by email. Viewers can look; to edit they need a higher role (Contributor or above). Anyone opening it must be signed in to Claude for the saved data to load. If you need it open to people without Claude accounts, that's the point to move to your own site.</p>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>
