@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phone Alerts with ntfy</title>
+<meta name="description" content="Send free push notifications from your app to your phone with ntfy, with prompts to add it using Claude.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar" aria-label="Steps"></nav>
+<main><div class="content">
+
+<p class="eyebrow">Add-on</p>
+<h1>Send alerts to your phone with ntfy</h1>
+<p class="lead">ntfy ("notify") is a free, open-source push notification service. Your app sends a short message to a web address, and the ntfy app on your phone pops it up straight away, like a text. There's no account to create, no API key and nothing to pay for normal personal use.</p>
+
+<h2 id="how">How it works</h2>
+<div class="flow" aria-label="How an alert reaches your phone">
+  <div class="node"><b>Your app</b><span>Something happens: a new entry, a bill due, low stock</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>ntfy.sh/&lt;topic&gt;</b><span>The app posts a message to your private topic</span></div>
+  <div class="arrow" aria-hidden="true">→</div>
+  <div class="node"><b>Your phone</b><span>The ntfy app shows it as a notification</span></div>
+</div>
+<p>A <strong>topic</strong> is just a name you make up, like a channel. Anything posted to that topic goes to every phone subscribed to it, so you can also subscribe a partner's or a colleague's phone to the same one.</p>
+
+<div class="callout warn"><span class="title">Treat the topic name like a password</span>On the free public server there's no login: anyone who knows or guesses the topic name can read your alerts and send you fake ones. Use a long, random name such as <code>myapp-alerts-k7q2x9m4w8</code>, never something like <code>alerts</code> or your name, and keep personal details out of the messages (see <a href="#privacy">Keep it private</a>).</div>
+
+<h2 id="phone">1. Set up your phone</h2>
+<ol class="steps">
+  <li>Install <strong>ntfy</strong> from the Google Play Store or the Apple App Store (it's also on F-Droid). On a computer you can use the web app at <code>ntfy.sh/app</code>.</li>
+  <li>Open it and allow notifications when asked.</li>
+  <li>Tap <strong>+</strong> (Subscribe to topic), type your random topic name, leave the server as <code>ntfy.sh</code>, and tap <strong>Subscribe</strong>.</li>
+  <li>On Android, if alerts arrive late, open the phone's battery settings and set ntfy to <strong>Unrestricted</strong> so the system doesn't put it to sleep.</li>
+</ol>
+
+<h2 id="test">2. Send yourself a test</h2>
+<p>Before involving the app, check the phone side works. Paste one of these into a terminal on your computer, with your own topic name. Your phone should buzz within a second or two.</p>
+<div class="block"><div class="label">Windows PowerShell</div><pre>Invoke-RestMethod -Method Post -Uri "https://ntfy.sh/&lt;your-topic&gt;" -Body "Hello from my computer" -Headers @{ Title = "Test alert"; Tags = "tada" }</pre></div>
+<div class="block"><div class="label">Mac / Linux terminal</div><pre>curl -H "Title: Test alert" -H "Tags: tada" -d "Hello from my computer" https://ntfy.sh/&lt;your-topic&gt;</pre></div>
+<p>Or just ask Claude Code: <em>"Send a test ntfy alert to the topic &lt;your-topic&gt;."</em></p>
+
+<h2 id="where">3. Where the alert is sent from</h2>
+<p>Which part of the app sends the alert depends on how it's published:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Your app is…</th><th>Send alerts from</th><th>Topic name kept</th></tr></thead>
+  <tbody>
+    <tr><td>A full site on Netlify (<a href="netlify.html">Step 5</a>)</td><td>A server function, so alerts go out even when nobody has the page open. <strong>Recommended.</strong></td><td>Secretly, in a Netlify environment variable</td></tr>
+    <tr><td>A quick-path site on GitHub Pages (<a href="simple.html">quick path</a>)</td><td>The page itself, while it's open in a browser</td><td>In the page source, visible to anyone who looks. Only use it for harmless alerts.</td></tr>
+    <tr><td>Still an Artifact in claude.ai</td><td>Not yet. Artifacts run in a locked-down sandbox that normally blocks calls to outside sites, so add alerts once the app has its own site.</td><td>n/a</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="netlify">4. Add alerts to a Netlify site</h2>
+<p>Give this to Claude Code in the folder of your site. It sends the alert from the server, so the topic name never appears in the page.</p>
+<div class="block prompt"><div class="label">Prompt: ntfy alerts from a Netlify function</div><pre>Add phone push alerts to my site using ntfy (https://ntfy.sh):
+- Send them from the server (a Netlify function), never from the browser.
+- Read the topic from the environment variable NTFY_TOPIC. Also support optional
+  NTFY_SERVER (default https://ntfy.sh) and NTFY_TOKEN (sent as "Authorization: Bearer ...")
+  in case I later use a protected topic or my own server. If NTFY_TOPIC isn't set, skip alerts silently.
+- POST the message text as the body, with these headers:
+  Title: a short summary, Priority: "high" (or "urgent" for &lt;what counts as urgent&gt;),
+  Tags: an emoji name such as "bell", Click: a link that opens the right page of my site.
+- Send an alert when: &lt;e.g. a new booking or form is submitted / a record is marked urgent&gt;.
+- Messages must not contain personal details (names, phone numbers, amounts). Say what
+  happened and link to the site, e.g. "New booking received. Tap to open."
+- A failed alert must never stop the save itself: log the error and carry on.
+- Tell me which environment variables to add in Netlify, then send a test alert.</pre></div>
+<ol class="steps">
+  <li>In Netlify, open your site, then <strong>Site configuration → Environment variables → Add a variable</strong>. Key <code>NTFY_TOPIC</code>, value your random topic name.</li>
+  <li>Redeploy (Netlify only picks up new variables on the next deploy): <strong>Deploys → Trigger deploy</strong>, or ask Claude to publish.</li>
+  <li>Do whatever triggers the alert on the live site and check your phone.</li>
+</ol>
+
+<h3 id="scheduled">Alerts on a schedule</h3>
+<p>Netlify can also run a function on a timer, which is handy for reminders and daily summaries even when nobody has opened the app.</p>
+<div class="block prompt"><div class="label">Prompt: a scheduled reminder</div><pre>Add a Netlify scheduled function that runs &lt;e.g. every day at 7am New Zealand time&gt;
+and sends an ntfy alert (using the same NTFY_TOPIC settings) when &lt;e.g. a bill is due in
+the next 3 days / stock of anything is below its minimum / no backup has been made for 7 days&gt;.
+Send nothing when there's nothing to report. Remember the schedule is in UTC, so convert my time.</pre></div>
+<div class="callout"><span class="title">Encrypted apps</span>If your data is encrypted with a PIN (<a href="features.html#login">Step 2</a>), the server can't read it, so a scheduled function can't see what's due. Either alert from the page when someone saves ("New entry added"), or store just the dates the reminder needs, unencrypted and without any other detail.</div>
+
+<h2 id="quick">5. Alerts on a quick-path site</h2>
+<p>A GitHub Pages site has no server, so the page sends the alert itself while it's open. ntfy accepts calls straight from a browser, so this works, but the topic name sits in the page where anyone can read it.</p>
+<div class="block prompt"><div class="label">Prompt: ntfy alerts from the page</div><pre>Add ntfy phone alerts to this page. Send a POST with fetch() to https://ntfy.sh/&lt;topic&gt;
+with a Title header and the message as the body, when &lt;e.g. a timer finishes / a task is overdue&gt;.
+Put the topic in a Settings box (saved in localStorage, wrapped in try/catch) rather than in the
+code, with a "Send test alert" button next to it. Never include personal details in the message.
+If sending fails, show a small warning instead of an error pop-up.</pre></div>
+
+<h2 id="ideas">What to alert on</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>App</th><th>Useful alert</th></tr></thead>
+  <tbody>
+    <tr><td>Bookings, enquiries or a contact form</td><td>"New enquiry received", tapping opens the admin page</td></tr>
+    <tr><td>Budget or bills</td><td>A morning reminder when a bill is due in the next few days</td></tr>
+    <tr><td>Stock or inventory</td><td>"3 items are below their minimum"</td></tr>
+    <tr><td>Task or job board</td><td>A card moved to "Urgent", or overdue cards each morning</td></tr>
+    <tr><td>Shared household or team app</td><td>"Someone added an entry" so the others know to check</td></tr>
+    <tr><td>Any app with a login</td><td>Several wrong PIN attempts in a row, as an early warning</td></tr>
+    <tr><td>Any app with data</td><td>"No backup for 7 days", as a nudge to click Export</td></tr>
+  </tbody>
+</table></div>
+<p>Keep alerts rare. If the phone buzzes for everything, you'll start ignoring it or mute it.</p>
+
+<h2 id="options">Making alerts more useful</h2>
+<p>ntfy reads a few optional headers. Ask Claude for any of these by name:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Header</th><th>What it does</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td><code>Title</code></td><td>Bold first line of the notification</td><td><code>New booking</code></td></tr>
+    <tr><td><code>Priority</code></td><td><code>min</code>, <code>low</code>, <code>default</code>, <code>high</code> or <code>urgent</code>. Urgent can sound even in some quiet modes.</td><td><code>high</code></td></tr>
+    <tr><td><code>Tags</code></td><td>Emoji names shown before the title, comma separated</td><td><code>warning,moneybag</code></td></tr>
+    <tr><td><code>Click</code></td><td>The web address that opens when the notification is tapped</td><td>Your site's admin page</td></tr>
+    <tr><td><code>Actions</code></td><td>Up to three buttons on the notification, such as "Open" or "Mark done"</td><td><code>view, Open app, https://…</code></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="privacy">Keep it private</h2>
+<ul>
+  <li><strong>Say that something happened, not the details.</strong> "New job logged, priority high" is fine. Customer names, addresses, phone numbers and amounts don't belong in an alert: the message passes through a public server and sits on the phone's lock screen.</li>
+  <li><strong>Use a long random topic</strong> and keep it out of public code. On Netlify it lives in <code>NTFY_TOPIC</code>; on the quick path, in the page's settings rather than the repository.</li>
+  <li><strong>If the topic leaks</strong>, pick a new random name, change it in Netlify (or the page's settings) and resubscribe on your phone. Old messages are only kept on the server for a short time.</li>
+  <li><strong>Want it locked down?</strong> A paid ntfy.sh account can reserve a topic so only you can use it, with an access token for your app (<code>NTFY_TOKEN</code>). Or run your own ntfy server (<code>NTFY_SERVER</code>). The prompt above already supports both, so it's only a settings change.</li>
+</ul>
+
+<h2 id="snags">Common snags</h2>
+<ul>
+  <li><strong>The test from the computer works but the site sends nothing.</strong> <code>NTFY_TOPIC</code> was added after the last deploy. Trigger a new deploy in Netlify.</li>
+  <li><strong>Nothing arrives at all.</strong> Check the topic is spelled exactly the same in the app and on the phone; topics are case-sensitive. Then try the test command above.</li>
+  <li><strong>Alerts arrive minutes late, or only when the phone is unlocked.</strong> Android battery saving is pausing ntfy. Set its battery use to Unrestricted.</li>
+  <li><strong>"Too many requests" (HTTP 429).</strong> Something is sending in a loop. Ask Claude to send at most one alert per event, and to group a burst into one summary.</li>
+  <li><strong>Nothing is sent from the Artifact.</strong> The Artifact sandbox blocks calls to outside sites. Test alerts on the live site instead.</li>
+  <li><strong>Someone else's messages turned up.</strong> Your topic name was too easy to guess. Switch to a long random one.</li>
+</ul>
+
+</div></main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

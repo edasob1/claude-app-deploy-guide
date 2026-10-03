@@ -9,6 +9,7 @@
     { href: 'netlify.html', title: 'Go live on Netlify' },
     { href: 'data.html', title: 'Move & protect your data' },
     { href: 'updates.html', title: 'Making changes later' },
+    { href: 'alerts.html', title: 'Add-on: phone alerts (ntfy)', mark: '🔔' },
     { href: 'simple.html', title: 'Quick path: simple sites', mark: '⚡' },
     { href: 'kanban.html', title: 'Idea: drag-and-drop boards', mark: '💡' },
     { href: 'troubleshooting.html', title: 'Troubleshooting', mark: '?' },
